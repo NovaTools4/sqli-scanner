@@ -85,7 +85,7 @@ def is_vulnerable(response):
             return True
     return False
 
-def scan_sql_injection(url):
+def scan_sql_injection(url,file):
     for c in "\"'":
         new_url = f"{url}{c}"
         print("[!] Trying", new_url)
@@ -93,6 +93,9 @@ def scan_sql_injection(url):
         if is_vulnerable(res):
 
             print("[+] SQL Injection vulnerability detected, link : ", url)
+            new = open(str(file), 'a')
+            new.write(url)
+            new.close()
             return
     forms = get_all_forms(url)
     print()
@@ -124,12 +127,13 @@ def scan_sql_injection(url):
 if __name__ == "__main__":
         logo()
         print('')
-        url = input("[+] Enter File : ")
+        url = input("[+] Enter List File : ")
+        output = input('[+] Enter Output File : ')
         try:
             file = open(url, 'r')
             for i in file:
                 print('')
-                scan_sql_injection(i)
+                scan_sql_injection(i,output)
         except FileNotFoundError:
             print('')
             print('[-] Please Enter File')
